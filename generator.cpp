@@ -12,7 +12,7 @@ typedef struct Point{
   int x, y;
 }point;
 
-point direction[8] = {{-1, -1}, {1, -1}, {1, -1}, {1, 0},
+point direction[8] = {{-1, -1}, {0, -1}, {1, -1}, {1, 0},
                       {1, 1}, {0, 1}, {-1, 1}, {-1, 0}};
 
 // puzzle : generator , check : 숫자 입력되었는지 확인하는 배열
@@ -97,7 +97,7 @@ int main(){
       break;
   }
 
-  /* 난수 이용하여 generator puzzle 생성 */
+  /* 1에서 4 사이의 중간값 결정  */
   int index = 1;
   while(index < N)
   {
@@ -112,12 +112,15 @@ int main(){
     index++;
   }
 
+  /* puzzle의 시작지점은 먼저 체크 */
   check[start.x][start.y] = 1;
   puzzle[start.x][start.y] = 1;
 
+  /* puzzle generate */
   Gen(width, height, start, 1, N);
 
-  /* output파일에 grid 출력*/
+  /* output파일에 puzzle 출력*/
+  output << width << “ “ << height << endl;
   for(int i = 0; i < width; i++)
   {
     for(int j = 0; j < height; j++)
