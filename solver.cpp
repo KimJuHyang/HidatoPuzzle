@@ -12,7 +12,7 @@ typedef struct Point{
   int x, y;
 }point;
 
-point direction[8] = {{-1, -1}, {1, -1}, {1, 0},
+point direction[7] = {{-1, -1}, {1, -1}, {1, 0},
                       {1, 1}, {0, 1}, {-1, 1}, {-1, 0}};
 
 int puzzle[MAXSIZE][MAXSIZE];
