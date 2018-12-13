@@ -12,19 +12,21 @@ typedef struct Point{
   int x, y;
 }point;
 
-point direction[7] = {{-1, -1}, {1, -1}, {1, 0},
+point direction[8] = {{-1, -1}, {0, -1}, {1, -1}, {1, 0},
                       {1, 1}, {0, 1}, {-1, 1}, {-1, 0}};
 
 int puzzle[MAXSIZE][MAXSIZE];
 int width, height;
 
-//이미 퍼즐에 채워진 숫자값들만 담을 벡터를 생성한다.
+//퍼즐의 중간값들만 담을 벡터를 생성한다.
 vector<int> betweens;
 
-// row, col, between의 iterator 역할을 하는 n, 채워야 할 값인 next
+// n : 퍼즐을 채워나가는 index
+// next : between vector의 index 
 bool solve(int r, int c, int n, int next){
 
-  //between 배열을 다 돌았다면 모두 채워진것이므로 true
+  //between 배열의 마지막값은 퍼즐의 마지막값
+  //n이 마지막번호까지 도달했음 = 퍼즐을 solve 함
   if( n > betweens.at(betweens.size()-1))
     return true;
 
@@ -32,13 +34,14 @@ bool solve(int r, int c, int n, int next){
   if( puzzle[r][c] != -1 && puzzle[r][c] != n)
     return false;
 
-  //벽이라면 false
-  if( puzzle[r][c] == 0)
+  //벽일 경우 false
+  if( puzzle[r][c] == 0 && betweens.at(next) == n)
     return false;
 
   //좌표를 계속 바꾸며 옮길때, 그 방향에서 움직일수 없을시 다시 돌아와야한다. 그때를 대비해 backup 값으로 저장.
   int back = puzzle[r][c];
-  //그러나 그 값이 이미 betweens의 값이라면(이미 채운 값이라면) next++하여 값 증가.
+  //그러나 그 값이 이미 현재 채워나갈 값과 같다면 
+  // 현재  betweens vector의 인덱스인 next가 next+1, 즉 다음값 가리키게 한다. 
   if(back == n) next++;
 
   puzzle[r][c] = n;
@@ -57,7 +60,7 @@ bool solve(int r, int c, int n, int next){
        }
   }
 
-  //움직일 수 없는경우 다시 돌아가기.
+  // 위에서 8방향을 돌아본 데서 다음 단계로 가지 못하면 원래대로 돌아옴 
   puzzle[r][c] = back;
   return false;
 }
@@ -85,7 +88,7 @@ int main(){
         start.x = i;
         start.y = j;
       }
-      //벽을 의미하는 0, 채워야할 부분인 -1을 제외한 값들만 삽입하는 과정
+      //벽을 의미하는 0, 채워야할 부분인 -1을 제외한 값, 즉 중간값을 vector에 push
       if(puzzle[i][j] != -1 && puzzle[i][j] != 0){
         betweens.push_back(puzzle[i][j]);
       }
@@ -104,12 +107,6 @@ int main(){
       output << puzzle[i][j] << " ";
     }
     output << endl;
-  }
-
-  //solve전 기존에 채워져있던 값들을 출력하여 이 숫자들을 기점으로 모든 숫자가 잘 이어졌는지 확인.
-  output << "sorted between numbers : ";
-  for(int i = 0; i < betweens.size(); i++){
-    output << betweens.at(i) << " ";
   }
 
 }
