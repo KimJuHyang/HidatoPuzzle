@@ -12,7 +12,7 @@ typedef struct Point{
   int x, y;
 }point;
 
-point direction[7] = {{-1, -1}, {1, -1}, {1, 0},
+point direction[8] = {{-1, -1}, {1, -1}, {1, 0},
                       {1, 1}, {0, 1}, {-1, 1}, {-1, 0}};
 
 int puzzle[MAXSIZE][MAXSIZE];
@@ -21,7 +21,7 @@ int width, height;
 //이미 퍼즐에 채워진 숫자값들만 담을 벡터를 생성한다.
 vector<int> betweens;
 
-// row, col, between의 iterator 역할을 하는 n
+// row, col, between의 iterator 역할을 하는 n, 채워야 할 값인 next
 bool solve(int r, int c, int n, int next){
 
   //between 배열을 다 돌았다면 모두 채워진것이므로 true
@@ -38,7 +38,7 @@ bool solve(int r, int c, int n, int next){
 
   //좌표를 계속 바꾸며 옮길때, 그 방향에서 움직일수 없을시 다시 돌아와야한다. 그때를 대비해 backup 값으로 저장.
   int back = puzzle[r][c];
-  //그러나 그 값이 이미 betweens의 값이라면 next++
+  //그러나 그 값이 이미 betweens의 값이라면(이미 채운 값이라면) next++하여 값 증가.
   if(back == n) next++;
 
   puzzle[r][c] = n;
@@ -57,7 +57,7 @@ bool solve(int r, int c, int n, int next){
        }
   }
 
-  //움직일 수 없는경우 다시 돌아가기
+  //움직일 수 없는경우 다시 돌아가기.
   puzzle[r][c] = back;
   return false;
 }
